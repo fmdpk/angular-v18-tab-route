@@ -1,8 +1,8 @@
-import {Component, inject} from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {AfterViewInit, Component, inject, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {NavigationEnd, Router, RouterOutlet} from '@angular/router';
-import { NavigationComponent } from './navigation/navigation.component';
-import { TabContainerComponent } from './tab-container/tab-container.component';
+import {NavigationComponent} from './navigation/navigation.component';
+import {TabContainerComponent} from './tab-container/tab-container.component';
 import {Subscription} from 'rxjs';
 import {TabService} from './tab.service';
 import {MENU_ITEMS} from './menuItems';
@@ -32,20 +32,20 @@ import {MENU_ITEMS} from './menuItems';
     }
   `]
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit, OnInit {
   subscription: Subscription | undefined = undefined;
   private router: Router = inject(Router);
   private tabService: TabService = inject(TabService);
+
   constructor() {
   }
 
   ngOnInit() {
-
   }
 
   ngAfterViewInit() {
-    this.subscription = this.subscription = this.router.events.subscribe(res=> {
-      if(res instanceof NavigationEnd) {
+    this.subscription = this.router.events.subscribe(res => {
+      if (res instanceof NavigationEnd) {
         MENU_ITEMS.forEach((item) => {
           if (item.route.includes(res.urlAfterRedirects)) {
             this.tabService.openTab(item.route, item.title, item.icon)

@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import {Routes} from '@angular/router';
 
 export const routes: Routes = [
   {
@@ -17,5 +17,5 @@ export const routes: Routes = [
     path: 'settings',
     loadComponent: () => import('./settings/settings.component').then(m => m.SettingsComponent)
   },
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' }
+  // {path: '**', redirectTo: '/dashboard', pathMatch: 'full'}
 ];

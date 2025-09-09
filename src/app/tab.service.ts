@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
+import {BehaviorSubject} from 'rxjs';
 
 export interface Tab {
   title: string;
@@ -15,12 +15,12 @@ export interface Tab {
 })
 export class TabService {
   private tabsSubject = new BehaviorSubject<Tab[]>([]);
-  private activeTabIdSubject = new BehaviorSubject<number>(-1);
-
   tabs$ = this.tabsSubject.asObservable();
+  private activeTabIdSubject = new BehaviorSubject<number>(-1);
   activeTabId$ = this.activeTabIdSubject.asObservable();
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+  }
 
   openTab(
     route: string,
@@ -41,23 +41,21 @@ export class TabService {
     // Check if tab already exists
     const existingTab = currentTabs.find((tab) => tab.route === route);
     if (existingTab) {
-      this.setActiveTab(existingTab.id);
-      this.router.navigate([existingTab.route]);
+      this.changeTabsState(existingTab.route, existingTab.id)
       return;
     }
 
     const updatedTabs = [...currentTabs, newTab];
     this.tabsSubject.next(updatedTabs);
-    this.setActiveTab(newTab.id);
-    this.router.navigate([route]);
+    this.changeTabsState(route, newTab.id)
   }
 
   closeTab(tabId: number): void {
     const currentTabs = this.tabsSubject.value;
-    let foundIndex = -1
+    let currentTabIndex = -1
     const tabToClose = currentTabs.find((tab, index) => {
-      if(tab.id === tabId){
-        foundIndex = index;
+      if (tab.id === tabId) {
+        currentTabIndex = index;
       }
       return tab.id === tabId;
     });
@@ -73,25 +71,30 @@ export class TabService {
 
     // If closed tab was active, activate last tab
     if (this.activeTabIdSubject.value === tabId && updatedTabs.length > 0) {
-      if(updatedTabs[foundIndex - 1]){
-        this.router.navigate([updatedTabs[foundIndex - 1].route]).then(() => {
-          this.setActiveTab(updatedTabs[foundIndex - 1].id);
-        });
+      if (updatedTabs[currentTabIndex - 1]) {
+        this.changeTabsState(updatedTabs[currentTabIndex - 1].route, updatedTabs[currentTabIndex - 1].id)
       } else {
-        this.router.navigate([updatedTabs[foundIndex].route]).then(() => {
-          this.setActiveTab(updatedTabs[foundIndex].id);
-        });
+        this.changeTabsState(updatedTabs[currentTabIndex].route, updatedTabs[currentTabIndex].id)
       }
 
     }
     // If closed tab was not active, and it was smaller than active tab, set active tab to last tab
-    else if(this.activeTabIdSubject.value !== tabId && this.activeTabIdSubject.value > tabId && updatedTabs.length > 0) {
-      this.router.navigate([updatedTabs[this.activeTabIdSubject.value - 1].route]).then(() => {
-        this.setActiveTab(this.activeTabIdSubject.value - 1);
-      });
+    else if (this.activeTabIdSubject.value !== tabId && this.activeTabIdSubject.value > tabId && updatedTabs.length > 0) {
+      this.changeTabsState(updatedTabs[this.activeTabIdSubject.value - 1].route, this.activeTabIdSubject.value - 1)
     } else if (updatedTabs.length === 0) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/'])
     }
+  }
+
+  /**
+   * @description change route and set active route
+   * @param {number} id
+   * @param {string} route
+   * */
+  changeTabsState(route: string, id: number): void {
+    this.router.navigate([route]).then(() => {
+      this.setActiveTab(id);
+    });
   }
 
   setActiveTab(tabId: number): void {
@@ -99,7 +102,7 @@ export class TabService {
   }
 
   private generateId(): number {
-    if(this.tabsSubject.value.length > 0){
+    if (this.tabsSubject.value.length > 0) {
       return this.tabsSubject.value.length
     } else {
       return 0;
