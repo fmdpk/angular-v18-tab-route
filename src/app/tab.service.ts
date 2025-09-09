@@ -73,9 +73,16 @@ export class TabService {
 
     // If closed tab was active, activate last tab
     if (this.activeTabIdSubject.value === tabId && updatedTabs.length > 0) {
-      this.router.navigate([updatedTabs[foundIndex - 1].route]).then(() => {
-        this.setActiveTab(updatedTabs[foundIndex - 1].id);
-      });
+      if(updatedTabs[foundIndex - 1]){
+        this.router.navigate([updatedTabs[foundIndex - 1].route]).then(() => {
+          this.setActiveTab(updatedTabs[foundIndex - 1].id);
+        });
+      } else {
+        this.router.navigate([updatedTabs[foundIndex].route]).then(() => {
+          this.setActiveTab(updatedTabs[foundIndex].id);
+        });
+      }
+
     }
     // If closed tab was not active, and it was smaller than active tab, set active tab to last tab
     else if(this.activeTabIdSubject.value !== tabId && this.activeTabIdSubject.value > tabId && updatedTabs.length > 0) {
