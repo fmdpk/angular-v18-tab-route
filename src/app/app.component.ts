@@ -46,8 +46,6 @@ export class AppComponent {
   ngAfterViewInit() {
     this.subscription = this.subscription = this.router.events.subscribe(res=> {
       if(res instanceof NavigationEnd) {
-        console.log(res.url);
-        console.log(res.urlAfterRedirects);
         MENU_ITEMS.forEach((item) => {
           if (item.route.includes(res.urlAfterRedirects)) {
             this.tabService.openTab(item.route, item.title, item.icon)

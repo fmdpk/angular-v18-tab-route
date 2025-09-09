@@ -11,7 +11,7 @@ export interface Tab {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TabService {
   private tabsSubject = new BehaviorSubject<Tab[]>([]);
@@ -22,22 +22,27 @@ export class TabService {
 
   constructor(private router: Router) {}
 
-  openTab(route: string, title: string, icon?: string, closable: boolean = true): void {
+  openTab(
+    route: string,
+    title: string,
+    icon?: string,
+    closable: boolean = true
+  ): void {
     const newTab: Tab = {
       id: this.generateId(),
       route,
       title,
       icon,
-      closable
+      closable,
     };
 
     const currentTabs = this.tabsSubject.value;
 
     // Check if tab already exists
-    const existingTab = currentTabs.find(tab => tab.route === route);
-    console.log(existingTab)
+    const existingTab = currentTabs.find((tab) => tab.route === route);
     if (existingTab) {
       this.setActiveTab(existingTab.id);
+      this.router.navigate([existingTab.route]);
       return;
     }
 
@@ -48,21 +53,17 @@ export class TabService {
   }
 
   closeTab(tabId: string): void {
-    console.log( this.tabsSubject.value)
     const currentTabs = this.tabsSubject.value;
-    const tabToClose = currentTabs.find(tab => tab.id === tabId);
-    console.log( tabToClose)
+    const tabToClose = currentTabs.find((tab) => tab.id === tabId);
 
     if (!tabToClose) return;
 
-    const updatedTabs = currentTabs.filter(tab => tab.id !== tabId);
-    console.log( updatedTabs)
+    const updatedTabs = currentTabs.filter((tab) => tab.id !== tabId);
     this.tabsSubject.next(updatedTabs);
 
     // If closed tab was active, activate another tab
     if (this.activeTabIdSubject.value === tabId && updatedTabs.length > 0) {
-      console.log(updatedTabs[updatedTabs.length - 1])
-      this.setActiveTab(updatedTabs[updatedTabs.length - 1].id);
+      // this.setActiveTab(updatedTabs[updatedTabs.length - 1].id);
       this.router.navigate([updatedTabs[updatedTabs.length - 1].route]);
     } else if (updatedTabs.length === 0) {
       this.router.navigate(['/']);
