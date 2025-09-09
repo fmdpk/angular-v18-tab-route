@@ -63,8 +63,8 @@ export class TabService {
 
     // If closed tab was active, activate another tab
     if (this.activeTabIdSubject.value === tabId && updatedTabs.length > 0) {
-      // this.setActiveTab(updatedTabs[updatedTabs.length - 1].id);
-      this.router.navigate([updatedTabs[updatedTabs.length - 1].route]);
+      this.setActiveTab(updatedTabs[0].id);
+      this.router.navigate([updatedTabs[0].route]);
     } else if (updatedTabs.length === 0) {
       this.router.navigate(['/']);
     }
