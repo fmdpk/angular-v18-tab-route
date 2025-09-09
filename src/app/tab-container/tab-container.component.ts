@@ -41,7 +41,7 @@ import { TabService, Tab } from '../tab.service';
 })
 export class TabContainerComponent implements OnInit, OnDestroy {
   tabs: Tab[] = [];
-  activeTabId: string = '';
+  activeTabId: number = -1;
   activeIndex: number = 0;
 
   private subscriptions: Subscription[] = [];
@@ -60,11 +60,11 @@ export class TabContainerComponent implements OnInit, OnDestroy {
         this.updateActiveIndex();
       }),
 
-      this.router.events.subscribe((event) => {
-        if (event instanceof NavigationEnd) {
-          // Handle navigation changes if needed
-        }
-      })
+      // this.router.events.subscribe((event) => {
+      //   if (event instanceof NavigationEnd) {
+      //     // Handle navigation changes if needed
+      //   }
+      // })
     );
   }
 
@@ -86,7 +86,9 @@ export class TabContainerComponent implements OnInit, OnDestroy {
   private updateActiveIndex(): void {
     const index = this.tabs.findIndex((tab) => tab.id === this.activeTabId);
     if (index !== -1) {
-      this.activeIndex = index;
+      setTimeout(()=> {
+        this.activeIndex = index;
+      })
     }
   }
 

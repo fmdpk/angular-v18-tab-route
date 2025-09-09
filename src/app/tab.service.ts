@@ -7,7 +7,7 @@ export interface Tab {
   route: string;
   icon?: string;
   closable?: boolean;
-  id: string;
+  id: number;
 }
 
 @Injectable({
@@ -15,7 +15,7 @@ export interface Tab {
 })
 export class TabService {
   private tabsSubject = new BehaviorSubject<Tab[]>([]);
-  private activeTabIdSubject = new BehaviorSubject<string>('');
+  private activeTabIdSubject = new BehaviorSubject<number>(-1);
 
   tabs$ = this.tabsSubject.asObservable();
   activeTabId$ = this.activeTabIdSubject.asObservable();
@@ -52,29 +52,50 @@ export class TabService {
     this.router.navigate([route]);
   }
 
-  closeTab(tabId: string): void {
+  closeTab(tabId: number): void {
     const currentTabs = this.tabsSubject.value;
-    const tabToClose = currentTabs.find((tab) => tab.id === tabId);
+    let foundIndex = -1
+    const tabToClose = currentTabs.find((tab, index) => {
+      if(tab.id === tabId){
+        foundIndex = index;
+      }
+      return tab.id === tabId;
+    });
 
     if (!tabToClose) return;
 
     const updatedTabs = currentTabs.filter((tab) => tab.id !== tabId);
+    //reinitialize tabs id with their index in tabs array
+    updatedTabs.forEach((tab, index) => {
+      tab.id = index;
+    })
     this.tabsSubject.next(updatedTabs);
 
-    // If closed tab was active, activate another tab
+    // If closed tab was active, activate last tab
     if (this.activeTabIdSubject.value === tabId && updatedTabs.length > 0) {
-      this.setActiveTab(updatedTabs[0].id);
-      this.router.navigate([updatedTabs[0].route]);
+      this.router.navigate([updatedTabs[foundIndex - 1].route]).then(() => {
+        this.setActiveTab(updatedTabs[foundIndex - 1].id);
+      });
+    }
+    // If closed tab was not active, and it was smaller than active tab, set active tab to last tab
+    else if(this.activeTabIdSubject.value !== tabId && this.activeTabIdSubject.value > tabId && updatedTabs.length > 0) {
+      this.router.navigate([updatedTabs[this.activeTabIdSubject.value - 1].route]).then(() => {
+        this.setActiveTab(this.activeTabIdSubject.value - 1);
+      });
     } else if (updatedTabs.length === 0) {
       this.router.navigate(['/']);
     }
   }
 
-  setActiveTab(tabId: string): void {
+  setActiveTab(tabId: number): void {
     this.activeTabIdSubject.next(tabId);
   }
 
-  private generateId(): string {
-    return Math.random().toString(36).substr(2, 9);
+  private generateId(): number {
+    if(this.tabsSubject.value.length > 0){
+      return this.tabsSubject.value.length
+    } else {
+      return 0;
+    }
   }
 }
