@@ -28,9 +28,14 @@ export class AppComponent implements AfterViewInit, OnInit {
   ngAfterViewInit() {
     this.subscription = this.router.events.subscribe(res => {
       if (res instanceof NavigationEnd) {
+        console.log(res)
+        console.log(res.urlAfterRedirects)
+        // this.tabService.openTab(res.urlAfterRedirects, res.urlAfterRedirects, '')
+        // this.subscription?.unsubscribe()
+        // this.subscription = undefined
         MENU_ITEMS.forEach((item) => {
           if (item.route.includes(res.urlAfterRedirects)) {
-            this.tabService.openTab(item.route, item.title, item.icon)
+            this.tabService.openTab(res.urlAfterRedirects, item.title, item.icon)
             this.subscription?.unsubscribe()
             this.subscription = undefined
           }

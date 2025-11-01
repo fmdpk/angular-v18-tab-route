@@ -16,20 +16,27 @@ export const MENU_ITEMS: MenuItem[] = [
   },
   {
     id: '2',
+    icon: 'pi pi-home',
+    isActive: false,
+    route: '/dashboard/:id',
+    title: 'Dashboard Detail'
+  },
+  {
+    id: '3',
     icon: 'pi pi-users',
     isActive: false,
     route: '/users',
     title: 'Users'
   },
   {
-    id: '3',
+    id: '4',
     icon: 'pi pi-shopping-cart',
     isActive: false,
     route: '/products',
     title: 'Products'
   },
   {
-    id: '4',
+    id: '5',
     icon: 'pi pi-cog',
     isActive: false,
     route: '/settings',
