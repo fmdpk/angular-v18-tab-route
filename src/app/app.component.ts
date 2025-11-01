@@ -11,26 +11,8 @@ import {MENU_ITEMS} from './menuItems';
   selector: 'app-root',
   standalone: true,
   imports: [CommonModule, RouterOutlet, NavigationComponent, TabContainerComponent],
-  template: `
-    <div class="app-container">
-      <app-navigation></app-navigation>
-      <div class="content">
-        <app-tab-container></app-tab-container>
-      </div>
-    </div>
-  `,
-  styles: [`
-    .app-container {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .content {
-      flex: 1;
-      overflow: hidden;
-    }
-  `]
+  templateUrl: 'app.component.html',
+  styleUrl: 'app.component.scss'
 })
 export class AppComponent implements AfterViewInit, OnInit {
   subscription: Subscription | undefined = undefined;

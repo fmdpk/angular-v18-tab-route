@@ -10,34 +10,8 @@ import { TabService, Tab } from '../tab.service';
   selector: 'app-tab-container',
   standalone: true,
   imports: [CommonModule, TabViewModule, TabMenuModule, RouterOutlet],
-  template: `
-    <p-tabView
-      [(activeIndex)]="activeIndex"
-      [scrollable]="true"
-      (onChange)="onTabChange($event)"
-      (onClose)="
-        $event.originalEvent.preventDefault();
-        $event.originalEvent.stopPropagation();
-        onTabClose($event)
-      "
-    >
-      <p-tabPanel
-        *ngFor="let tab of tabs; let i = index"
-        [header]="tab.title"
-        [closable]="tab.closable"
-        [selected]="tab.id === activeTabId"
-      >
-        <router-outlet *ngIf="activeIndex === i"></router-outlet>
-      </p-tabPanel>
-    </p-tabView>
-  `,
-  styles: [
-    `
-      :host ::ng-deep .p-tabview-panels {
-        padding: 0;
-      }
-    `,
-  ],
+  templateUrl: 'tab-container.component.html',
+  styleUrl: 'tab-container.component.scss',
 })
 export class TabContainerComponent implements OnInit, OnDestroy {
   tabs: Tab[] = [];
@@ -52,19 +26,12 @@ export class TabContainerComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.tabService.tabs$.subscribe((tabs) => {
         this.tabs = tabs;
-        // this.updateActiveIndex();
       }),
 
       this.tabService.activeTabId$.subscribe((activeTabId) => {
         this.activeTabId = activeTabId;
         this.updateActiveIndex();
       }),
-
-      // this.router.events.subscribe((event) => {
-      //   if (event instanceof NavigationEnd) {
-      //     // Handle navigation changes if needed
-      //   }
-      // })
     );
   }
 

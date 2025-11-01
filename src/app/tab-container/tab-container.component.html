@@ -1,1 +1,19 @@
-<p>tab-container works!</p>
+<p-tabView
+  [(activeIndex)]="activeIndex"
+  [scrollable]="true"
+  (onChange)="onTabChange($event)"
+  (onClose)="
+        $event.originalEvent.preventDefault();
+        $event.originalEvent.stopPropagation();
+        onTabClose($event)
+      "
+>
+  <p-tabPanel
+    *ngFor="let tab of tabs; let i = index"
+    [header]="tab.title"
+    [closable]="tab.closable"
+    [selected]="tab.id === activeTabId"
+  >
+    <router-outlet *ngIf="activeIndex === i"></router-outlet>
+  </p-tabPanel>
+</p-tabView>
