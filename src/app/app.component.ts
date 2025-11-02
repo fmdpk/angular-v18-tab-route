@@ -5,7 +5,7 @@ import {NavigationComponent} from './navigation/navigation.component';
 import {TabContainerComponent} from './tab-container/tab-container.component';
 import {Subscription} from 'rxjs';
 import {TabService} from './tab.service';
-import {MENU_ITEMS} from './menuItems';
+import {MENU_ITEMS, MenuItem} from './menuItems';
 
 @Component({
   selector: 'app-root',
@@ -28,19 +28,29 @@ export class AppComponent implements AfterViewInit, OnInit {
   ngAfterViewInit() {
     this.subscription = this.router.events.subscribe(res => {
       if (res instanceof NavigationEnd) {
-        console.log(res)
-        console.log(res.urlAfterRedirects)
-        // this.tabService.openTab(res.urlAfterRedirects, res.urlAfterRedirects, '')
-        // this.subscription?.unsubscribe()
-        // this.subscription = undefined
         MENU_ITEMS.forEach((item) => {
-          if (item.route.includes(res.urlAfterRedirects)) {
-            this.tabService.openTab(res.urlAfterRedirects, item.title, item.icon)
+          let title = this.createTabTitle(item, res.urlAfterRedirects)
+          if (item.route.includes(title.split(' - ')[0])) {
+            this.tabService.openTab(res.urlAfterRedirects, title, item.icon)
             this.subscription?.unsubscribe()
             this.subscription = undefined
           }
         })
       }
     })
+  }
+
+  createTabTitle(item: MenuItem, route: string) {
+    let title = ''
+    let splitRoute = route.split('/')
+    splitRoute = splitRoute.filter(item => item !== '')
+    splitRoute.forEach((item, index) => {
+      if (index !== splitRoute.length - 1) {
+        title += (item + ' - ')
+      } else if (index === splitRoute.length - 1) {
+        title += item
+      }
+    })
+    return title
   }
 }

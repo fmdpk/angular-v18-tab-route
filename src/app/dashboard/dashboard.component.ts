@@ -30,6 +30,6 @@ export class DashboardComponent {
 
   goToDetail(item: {id: number, title: string}){
     this.router.navigate(['/dashboard', item.id])
-    this.tabService.openTab(`${'/dashboard/' + item.id}`, item.title, '')
+    this.tabService.openTab(`${'/dashboard/' + item.id}`, 'Dashboard - ' + item.id, '')
   }
 }
