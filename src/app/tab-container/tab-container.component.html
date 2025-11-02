@@ -43,13 +43,14 @@
         </p-tab>
       }
     </p-tablist>
-    <p-tabpanels>
-      @for (tab of tabs; track tab.id) {
-        <p-tabpanel [value]="tab.id">
-          <router-outlet *ngIf="activeIndex === tab.id"></router-outlet>
-        </p-tabpanel>
-      }
-    </p-tabpanels>
+<!--    <p-tabpanels>-->
+<!--      @for (tab of tabs; track tab.id) {-->
+<!--        <p-tabpanel [value]="tab.id">-->
+<!--          <router-outlet *ngIf="activeIndex === tab.id"></router-outlet>-->
+<!--        </p-tabpanel>-->
+<!--      }-->
+<!--    </p-tabpanels>-->
 
   </p-tabs>
+  <router-outlet></router-outlet>
 </div>

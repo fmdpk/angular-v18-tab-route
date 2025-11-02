@@ -6,6 +6,7 @@ import { TabService, Tab } from '../tab.service';
 import {CdkDrag, CdkDragDrop, CdkDragStart, CdkDropList, moveItemInArray} from '@angular/cdk/drag-drop';
 import {TabsModule} from 'primeng/tabs';
 import {FormControl} from '@angular/forms';
+import {TabPanel} from 'primeng/tabview';
 
 @Component({
   selector: 'app-tab-container',
@@ -50,10 +51,8 @@ export class TabContainerComponent implements OnInit, OnDestroy {
 
   private updateActiveIndex(): void {
     const index = this.tabs.findIndex((tab) => tab.id === this.activeTabId);
-    setTimeout(()=> {
-      this.activeIndex = index;
-      this.selected.setValue(index)
-    })
+    this.activeIndex = index;
+    this.selected.setValue(index)
   }
 
   removeTab(event: MouseEvent, index: number) {

@@ -106,12 +106,13 @@ export class TabService {
    * @param changeRoute
    * */
   changeTabsState(route: string, id: number, changeRoute: boolean = true): void {
-    console.log(changeRoute)
     if(changeRoute){
+      console.log(changeRoute)
       this.router.navigate([route]).then(() => {
         this.setActiveTab(id);
       });
     } else {
+      console.log(changeRoute)
       this.setActiveTab(id);
     }
   }
