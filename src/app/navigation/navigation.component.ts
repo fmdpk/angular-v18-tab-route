@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
+import {Router} from '@angular/router';
 import {TabService} from '../tab.service';
 
 @Component({
@@ -11,9 +12,12 @@ import {TabService} from '../tab.service';
   styleUrl: 'navigation.component.scss'
 })
 export class NavigationComponent {
-  constructor(private tabService: TabService) {}
+  constructor(private router: Router, private tabService: TabService) {}
 
   openTab(route: string, title: string, icon: string): void {
-    this.tabService.openTab(route, title, icon);
+    // this.tabService.openTab(route, title, icon);
+    this.tabService.title$.next(title)
+    this.tabService.icon$.next(icon)
+    this.router.navigate([route])
   }
 }

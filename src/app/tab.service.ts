@@ -15,6 +15,8 @@ export interface Tab {
 })
 export class TabService {
   private tabsSubject = new BehaviorSubject<Tab[]>([]);
+  title$ = new BehaviorSubject<string>('');
+  icon$ = new BehaviorSubject<string>('');
   tabs$ = this.tabsSubject.asObservable();
   private activeTabIdSubject = new BehaviorSubject<number>(-1);
   activeTabId$ = this.activeTabIdSubject.asObservable();
@@ -35,7 +37,6 @@ export class TabService {
       icon,
       closable,
     };
-
     const currentTabs = this.tabsSubject.value;
 
     // Check if tab already exists

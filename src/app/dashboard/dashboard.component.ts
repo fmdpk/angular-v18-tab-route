@@ -29,7 +29,9 @@ export class DashboardComponent {
   ]
 
   goToDetail(item: {id: number, title: string}){
+    this.tabService.title$.next('dashboard - ' + item.id)
+    this.tabService.icon$.next('pi pi-home')
     this.router.navigate(['/dashboard', item.id])
-    this.tabService.openTab(`${'/dashboard/' + item.id}`, 'Dashboard - ' + item.id, '')
+    // this.tabService.openTab(`${'/dashboard/' + item.id}`, 'Dashboard - ' + item.id, '')
   }
 }

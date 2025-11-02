@@ -14,6 +14,12 @@
     [closable]="tab.closable"
     [selected]="tab.id === activeTabId"
   >
+    <ng-template pTemplate="header">
+      <div class="tab-header-wrapper">
+        <i [class]="tab.icon"></i>
+        <span>{{tab.title}}</span>
+      </div>
+    </ng-template>
     <router-outlet *ngIf="activeIndex === i"></router-outlet>
   </p-tabPanel>
 </p-tabView>
