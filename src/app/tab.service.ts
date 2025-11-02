@@ -17,6 +17,7 @@ export class TabService {
   private tabsSubject = new BehaviorSubject<Tab[]>([]);
   title$ = new BehaviorSubject<string>('');
   icon$ = new BehaviorSubject<string>('');
+  wasLastTab$ = new BehaviorSubject<boolean>(false);
   tabs$ = this.tabsSubject.asObservable();
   private activeTabIdSubject = new BehaviorSubject<number>(-1);
   activeTabId$ = this.activeTabIdSubject.asObservable();
@@ -52,6 +53,7 @@ export class TabService {
   }
 
   closeTab(tabId: number): void {
+    this.wasLastTab$.next(false)
     const currentTabs = this.tabsSubject.value;
     let currentTabIndex = -1
     const tabToClose = currentTabs.find((tab, index) => {
@@ -83,6 +85,9 @@ export class TabService {
     else if (this.activeTabIdSubject.value !== tabId && this.activeTabIdSubject.value > tabId && updatedTabs.length > 0) {
       this.changeTabsState(updatedTabs[this.activeTabIdSubject.value - 1].route, this.activeTabIdSubject.value - 1)
     } else if (updatedTabs.length === 0) {
+      this.title$.next('dashboard')
+      this.icon$.next('pi pi-home')
+      this.wasLastTab$.next(true)
       this.router.navigate(['/'])
     }
   }

@@ -33,7 +33,11 @@ export class AppComponent implements AfterViewInit, OnInit {
         if (this.navigationEndCounter < 2) {
           this.createTabOnPageLoad(res)
         } else if (this.navigationEndCounter >= 2){
-          this.tabService.openTab(res.urlAfterRedirects, this.tabService.title$.getValue(), this.tabService.icon$.getValue())
+          if(!this.tabService.wasLastTab$.getValue()){
+            this.tabService.openTab(res.urlAfterRedirects, this.tabService.title$.getValue(), this.tabService.icon$.getValue())
+          } else {
+            this.tabService.wasLastTab$.next(false)
+          }
         }
       }
     })
@@ -42,8 +46,14 @@ export class AppComponent implements AfterViewInit, OnInit {
   createTabOnPageLoad(res: NavigationEnd) {
     MENU_ITEMS.forEach((item) => {
       let title = this.createTabTitle(item, res.urlAfterRedirects)
+      if(title.split(' - ')[0] === '') {
+        this.tabService.title$.next('dashboard')
+        this.tabService.icon$.next('pi pi-home')
+        this.router.navigate(['/dashboard'])
+        return
+      }
       if (item.route.includes(title.split(' - ')[0])) {
-        this.tabService.openTab(res.urlAfterRedirects, title, item.icon)
+        this.tabService.openTab(res.urlAfterRedirects, title.split(' - ')[0] === '' ? item.title : title, item.icon)
       }
     })
   }

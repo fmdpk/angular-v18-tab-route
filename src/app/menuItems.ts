@@ -41,5 +41,12 @@ export const MENU_ITEMS: MenuItem[] = [
     isActive: false,
     route: '/settings',
     title: 'Settings'
-  }
+  },
+  {
+    id: '6',
+    icon: 'pi pi-warehouse',
+    isActive: false,
+    route: '/',
+    title: 'Home'
+  },
 ]

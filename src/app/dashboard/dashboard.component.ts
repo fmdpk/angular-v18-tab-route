@@ -28,6 +28,10 @@ export class DashboardComponent {
     },
   ]
 
+  ngOnInit(){
+    console.log('dashboard component')
+  }
+
   goToDetail(item: {id: number, title: string}){
     this.tabService.title$.next('dashboard - ' + item.id)
     this.tabService.icon$.next('pi pi-home')
