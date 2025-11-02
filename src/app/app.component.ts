@@ -33,8 +33,9 @@ export class AppComponent implements AfterViewInit, OnInit {
         if (this.navigationEndCounter < 2) {
           this.createTabOnPageLoad(res)
         } else if (this.navigationEndCounter >= 2){
+          console.log(res)
           if(!this.tabService.wasLastTab$.getValue()){
-            this.tabService.openTab(res.urlAfterRedirects, this.tabService.title$.getValue(), this.tabService.icon$.getValue())
+            this.tabService.openTab(res.urlAfterRedirects, this.tabService.title$.getValue(), this.tabService.icon$.getValue(), true, false)
           } else {
             this.tabService.wasLastTab$.next(false)
           }
@@ -53,7 +54,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         return
       }
       if (item.route.includes(title.split(' - ')[0])) {
-        this.tabService.openTab(res.urlAfterRedirects, title.split(' - ')[0] === '' ? item.title : title, item.icon)
+        this.tabService.openTab(res.urlAfterRedirects, title.split(' - ')[0] === '' ? item.title : title, item.icon, true, false)
       }
     })
   }

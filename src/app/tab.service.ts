@@ -19,7 +19,7 @@ export class TabService {
   icon$ = new BehaviorSubject<string>('');
   wasLastTab$ = new BehaviorSubject<boolean>(false);
   tabs$ = this.tabsSubject.asObservable();
-  private activeTabIdSubject = new BehaviorSubject<number>(-1);
+  activeTabIdSubject = new BehaviorSubject<number>(-1);
   activeTabId$ = this.activeTabIdSubject.asObservable();
 
   constructor(private router: Router) {
@@ -29,7 +29,8 @@ export class TabService {
     route: string,
     title: string,
     icon?: string,
-    closable: boolean = true
+    closable: boolean = true,
+    changeRoute: boolean = true
   ): void {
     const newTab: Tab = {
       id: this.generateId(),
@@ -43,13 +44,13 @@ export class TabService {
     // Check if tab already exists
     const existingTab = currentTabs.find((tab) => tab.route === route);
     if (existingTab) {
-      this.changeTabsState(existingTab.route, existingTab.id)
+      this.changeTabsState(existingTab.route, existingTab.id, changeRoute)
       return;
     }
 
     const updatedTabs = [...currentTabs, newTab];
     this.tabsSubject.next(updatedTabs);
-    this.changeTabsState(route, newTab.id)
+    this.changeTabsState(route, newTab.id, changeRoute)
   }
 
   closeTab(tabId: number): void {
@@ -67,10 +68,8 @@ export class TabService {
 
     const updatedTabs = currentTabs.filter((tab) => tab.id !== tabId);
     //reinitialize tabs id with their index in tabs array
-    updatedTabs.forEach((tab, index) => {
-      tab.id = index;
-    })
-    this.tabsSubject.next(updatedTabs);
+    this.reorderTabs(updatedTabs)
+
 
     // If closed tab was active, activate last tab
     if (this.activeTabIdSubject.value === tabId && updatedTabs.length > 0) {
@@ -88,19 +87,33 @@ export class TabService {
       this.title$.next('dashboard')
       this.icon$.next('pi pi-home')
       this.wasLastTab$.next(true)
+      this.setActiveTab(-1)
       this.router.navigate(['/'])
     }
+  }
+
+  reorderTabs(updatedTabs: Tab[]){
+    updatedTabs.forEach((tab, index) => {
+      tab.id = index;
+    })
+    this.tabsSubject.next(updatedTabs);
   }
 
   /**
    * @description change route and set active route
    * @param {number} id
    * @param {string} route
+   * @param changeRoute
    * */
-  changeTabsState(route: string, id: number): void {
-    this.router.navigate([route]).then(() => {
+  changeTabsState(route: string, id: number, changeRoute: boolean = true): void {
+    console.log(changeRoute)
+    if(changeRoute){
+      this.router.navigate([route]).then(() => {
+        this.setActiveTab(id);
+      });
+    } else {
       this.setActiveTab(id);
-    });
+    }
   }
 
   setActiveTab(tabId: number): void {

@@ -9,4 +9,7 @@ import { Component } from '@angular/core';
 })
 export class SettingsComponent {
 
+  ngOnInit(){
+    console.log('settings component')
+  }
 }

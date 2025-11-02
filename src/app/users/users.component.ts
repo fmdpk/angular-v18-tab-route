@@ -9,4 +9,7 @@ import { Component } from '@angular/core';
 })
 export class UsersComponent {
 
+  ngOnInit(){
+    console.log('users component')
+  }
 }
