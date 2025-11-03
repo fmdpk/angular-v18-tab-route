@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-users',
@@ -7,9 +7,12 @@ import { Component } from '@angular/core';
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })
-export class UsersComponent {
-
+export class UsersComponent implements OnInit{
+  title = 'users component'
   ngOnInit(){
-    console.log('users component')
+    console.log(this.title)
+    setTimeout(() => {
+      this.title = 'users component after 2 seconds'
+    }, 2000)
   }
 }

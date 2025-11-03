@@ -8,8 +8,11 @@ import { Component } from '@angular/core';
   styleUrl: './settings.component.scss'
 })
 export class SettingsComponent {
-
+  title = 'settings component'
   ngOnInit(){
-    console.log('settings component')
+    console.log(this.title)
+    setTimeout(() => {
+      this.title = 'settings component after 2 seconds'
+    }, 2000)
   }
 }
