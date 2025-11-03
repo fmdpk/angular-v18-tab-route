@@ -1,60 +1,55 @@
+<!--<p-tabView-->
+<!--  [(activeIndex)]="activeIndex"-->
+<!--  [scrollable]="true"-->
+<!--  (onChange)="onTabChange($event)"-->
+<!--  (onClose)="-->
+<!--        $event.originalEvent.preventDefault();-->
+<!--        $event.originalEvent.stopPropagation();-->
+<!--        onTabClose($event)-->
+<!--      "-->
+<!--&gt;-->
+<!--  <p-tabPanel-->
+<!--    *ngFor="let tab of tabs; let i = index"-->
+<!--    [header]="tab.title"-->
+<!--    [closable]="tab.closable"-->
+<!--    [selected]="tab.id === activeTabId"-->
+<!--  >-->
+<!--    <ng-template pTemplate="header">-->
+<!--      <div class="tab-header-wrapper">-->
+<!--        <i [class]="tab.icon"></i>-->
+<!--        <span>{{tab.title}}</span>-->
+<!--      </div>-->
+<!--    </ng-template>-->
+<!--    <router-outlet *ngIf="activeIndex === i"></router-outlet>-->
+<!--  </p-tabPanel>-->
+<!--</p-tabView>-->
+
 <div
   cdkDropList
   (cdkDropListDropped)="drop($event)"
   class="tab-list"
   cdkDropListOrientation="horizontal"
 >
-  <p-tabView
-    [(activeIndex)]="activeIndex"
-    [scrollable]="true"
-    (onChange)="onTabChange($event)"
-  >
-    <p-tabPanel
-      *ngFor="let tab of tabs; let i = index"
-      [header]="tab.title"
-      [cache]="true"
-      [closable]="tab.closable"
-      [selected]="tab.id === activeTabId"
-    >
-      <ng-template pTemplate="header">
-        <div class="tab-header-wrapper" cdkDrag>
-          <i [class]="tab.icon" (click)="$event.stopPropagation();onTabClose({index: i})"></i>
-          <span>{{tab.title}}</span>
-        </div>
-      </ng-template>
-      <ng-template pTemplate="content"> <router-outlet *ngIf="activeIndex === i"></router-outlet> </ng-template>
+  <p-tabs [(value)]="selected.value!" (valueChange)="onTabChange($event)" scrollable>
+    <p-tablist>
+      @for (tab of tabs; track tab.id; let i = $index) {
+        <p-tab [value]="i" cdkDrag (cdkDragStarted)="dragStarted($event, i)">
+          <span>{{ tab.title }}</span>
+          <i
+            [class]="tab.icon"
+            (click)="removeTab($event, i); $event.stopPropagation()"
+          ></i>
+          <!--<router-outlet></router-outlet>-->
+        </p-tab>
+      }
+    </p-tablist>
+    <p-tabpanels>
+      @for (tab of tabs; track tab.id) {
+        <p-tabpanel [value]="tab.id">
+          <router-outlet *ngIf="activeIndex === tab.id"></router-outlet>
+        </p-tabpanel>
+      }
+    </p-tabpanels>
 
-    </p-tabPanel>
-  </p-tabView>
+  </p-tabs>
 </div>
-
-<!--<div-->
-<!--  cdkDropList-->
-<!--  (cdkDropListDropped)="drop($event)"-->
-<!--  class="tab-list"-->
-<!--  cdkDropListOrientation="horizontal"-->
-<!--&gt;-->
-<!--  <p-tabs [(value)]="selected.value!" (valueChange)="onTabChange($event)" [lazy]="false" scrollable>-->
-<!--    <p-tablist>-->
-<!--      @for (tab of tabs; track tab.id; let i = $index) {-->
-<!--        <p-tab [value]="i" cdkDrag (cdkDragStarted)="dragStarted($event, i)">-->
-<!--          <span>{{ tab.title }}</span>-->
-<!--          <i-->
-<!--            [class]="tab.icon"-->
-<!--            (click)="removeTab($event, i); $event.stopPropagation()"-->
-<!--          ></i>-->
-<!--          &lt;!&ndash;<router-outlet></router-outlet>&ndash;&gt;-->
-<!--        </p-tab>-->
-<!--      }-->
-<!--    </p-tablist>-->
-<!--    <p-tabpanels>-->
-<!--      @for (tab of tabs; track tab.id) {-->
-<!--        <p-tabpanel [value]="tab.id">-->
-<!--          <router-outlet *ngIf="activeIndex === tab.id"></router-outlet>-->
-<!--        </p-tabpanel>-->
-<!--      }-->
-<!--    </p-tabpanels>-->
-
-<!--  </p-tabs>-->
-<!--&lt;!&ndash;  <router-outlet></router-outlet>&ndash;&gt;-->
-<!--</div>-->
