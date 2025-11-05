@@ -33,21 +33,19 @@
   <p-tabs [(value)]="selected.value!" (valueChange)="onTabChange($event)" scrollable>
     <p-tablist>
       @for (tab of tabs; track tab.id; let i = $index) {
-        <p-tab [value]="i" cdkDrag (cdkDragStarted)="dragStarted($event, i)">
+        <p-tab [value]="tab.id" cdkDrag (cdkDragStarted)="dragStarted($event, tab.id)">
           <span>{{ tab.title }}</span>
           <i
             [class]="tab.icon"
-            (click)="$event.stopPropagation();removeTab($event, i); "
+            (click)="$event.stopPropagation();removeTab($event, tab.id); "
           ></i>
-          <!--<router-outlet></router-outlet>-->
         </p-tab>
       }
     </p-tablist>
     <p-tabpanels>
       @for (tab of tabs; track tab.id) {
         <p-tabpanel [value]="tab.id">
-<!--          <router-outlet *ngIf="activeIndex === tab.id"></router-outlet>-->
-<!--          <router-outlet [name]="'Dashboard'"></router-outlet>-->
+          <!--          <router-outlet *ngIf="activeIndex === tab.id"></router-outlet>-->
           <router-outlet [name]="tab.outlet"></router-outlet>
         </p-tabpanel>
       }

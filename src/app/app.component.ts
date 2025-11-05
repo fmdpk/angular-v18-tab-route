@@ -48,6 +48,7 @@ export class AppComponent implements AfterViewInit, OnInit {
           // this.createTabOnPageLoad(res)
         } else if (this.navigationEndCounter >= 2){
           console.log(res)
+          console.log(this.tabService.wasLastTab$.getValue())
           if(!this.tabService.wasLastTab$.getValue()){
             this.tabService.openTab(res.url, this.tabService.title$.getValue(), this.tabService.outlet$.getValue(), this.tabService.icon$.getValue(), true, false)
           } else {
@@ -73,6 +74,14 @@ export class AppComponent implements AfterViewInit, OnInit {
       //   this.router.navigate(['/dashboard'])
       //   return
       // }
+
+      // routing for named-outlets
+      // this.router.navigate([{ outlets: {
+      //     Dashboard: ['dashboard'],
+      //     Products: ['products'],
+      //     Users: ['users']
+      //   }}]);
+
       if (item.route.includes(title.split(' - ')[0])) {
         this.tabService.openTab(res.url, title.split(' - ')[0] === '' ? item.title : title, item.outlet, item.icon, true, false)
       }
