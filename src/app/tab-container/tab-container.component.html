@@ -37,7 +37,7 @@
           <span>{{ tab.title }}</span>
           <i
             [class]="tab.icon"
-            (click)="removeTab($event, i); $event.stopPropagation()"
+            (click)="$event.stopPropagation();removeTab($event, i); "
           ></i>
           <!--<router-outlet></router-outlet>-->
         </p-tab>
@@ -46,7 +46,9 @@
     <p-tabpanels>
       @for (tab of tabs; track tab.id) {
         <p-tabpanel [value]="tab.id">
-          <router-outlet *ngIf="activeIndex === tab.id"></router-outlet>
+<!--          <router-outlet *ngIf="activeIndex === tab.id"></router-outlet>-->
+<!--          <router-outlet [name]="'Dashboard'"></router-outlet>-->
+          <router-outlet [name]="tab.outlet"></router-outlet>
         </p-tabpanel>
       }
     </p-tabpanels>

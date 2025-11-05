@@ -8,6 +8,8 @@ export interface Tab {
   icon?: string;
   closable?: boolean;
   id: number;
+  outlet: string,
+  name: string
 }
 
 @Injectable({
@@ -16,6 +18,7 @@ export interface Tab {
 export class TabService {
   private tabsSubject = new BehaviorSubject<Tab[]>([]);
   title$ = new BehaviorSubject<string>('');
+  outlet$ = new BehaviorSubject<string>('');
   icon$ = new BehaviorSubject<string>('');
   wasLastTab$ = new BehaviorSubject<boolean>(false);
   tabs$ = this.tabsSubject.asObservable();
@@ -28,6 +31,7 @@ export class TabService {
   openTab(
     route: string,
     title: string,
+    outlet: string,
     icon?: string,
     closable: boolean = true,
     changeRoute: boolean = true
@@ -38,6 +42,8 @@ export class TabService {
       title,
       icon,
       closable,
+      outlet,
+      name: 'name'
     };
     const currentTabs = this.tabsSubject.value;
 
@@ -67,22 +73,28 @@ export class TabService {
     if (!tabToClose) return;
 
     const updatedTabs = currentTabs.filter((tab) => tab.id !== tabId);
-    //reinitialize tabs id with their index in tabs array
     this.reorderTabs(updatedTabs)
+    //reinitialize tabs id with their index in tabs array
 
-
+    console.log(tabToClose)
+    console.log(updatedTabs)
+    console.log(this.activeTabIdSubject.value)
+    console.log(tabId)
+    console.log(updatedTabs.length)
     // If closed tab was active, activate last tab
     if (this.activeTabIdSubject.value === tabId && updatedTabs.length > 0) {
       if (updatedTabs[currentTabIndex - 1]) {
-        this.changeTabsState(updatedTabs[currentTabIndex - 1].route, updatedTabs[currentTabIndex - 1].id)
+        this.changeTabsState(updatedTabs[currentTabIndex - 1].route, updatedTabs[currentTabIndex - 1].id, false, tabToClose.outlet)
       } else {
-        this.changeTabsState(updatedTabs[currentTabIndex].route, updatedTabs[currentTabIndex].id)
+        this.changeTabsState(updatedTabs[currentTabIndex].route, updatedTabs[currentTabIndex].id, false, tabToClose.outlet)
       }
 
     }
     // If closed tab was not active, and it was smaller than active tab, set active tab to last tab
-    else if (this.activeTabIdSubject.value !== tabId && this.activeTabIdSubject.value > tabId && updatedTabs.length > 0) {
-      this.changeTabsState(updatedTabs[this.activeTabIdSubject.value - 1].route, this.activeTabIdSubject.value - 1)
+    else if (this.activeTabIdSubject.value !== tabId && updatedTabs.length > 0) {
+      // this.changeTabsState(updatedTabs[this.activeTabIdSubject.value - 1].route, this.activeTabIdSubject.value - 1, false, tabToClose.outlet)
+      let activeTabId= this.activeTabIdSubject.value > tabId ? this.activeTabIdSubject.value - 1 : this.activeTabIdSubject.value
+      this.changeTabsState('', activeTabId, false, tabToClose.outlet)
     } else if (updatedTabs.length === 0) {
       this.title$.next('dashboard')
       this.icon$.next('pi pi-home')
@@ -104,8 +116,10 @@ export class TabService {
    * @param {number} id
    * @param {string} route
    * @param changeRoute
+   * @param outlet
    * */
-  changeTabsState(route: string, id: number, changeRoute: boolean = true): void {
+  changeTabsState(route: string, id: number, changeRoute: boolean = true, outlet?: string): void {
+    console.log(changeRoute)
     if(changeRoute){
       console.log(changeRoute)
       this.router.navigate([route]).then(() => {
@@ -113,6 +127,10 @@ export class TabService {
       });
     } else {
       console.log(changeRoute)
+      if(outlet){
+        this.wasLastTab$.next(true)
+        this.router.navigate([{ outlets: { [outlet!]: null } }]);
+      }
       this.setActiveTab(id);
     }
   }

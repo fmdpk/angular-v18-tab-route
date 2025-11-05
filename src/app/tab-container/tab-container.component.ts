@@ -29,7 +29,7 @@ export class TabContainerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscriptions.push(
       this.tabService.tabs$.subscribe((tabs) => {
-        this.tabs = [...tabs];
+        this.tabs = tabs;
       }),
 
       this.tabService.activeTabId$.subscribe((activeTabId) => {
@@ -44,7 +44,7 @@ export class TabContainerComponent implements OnInit, OnDestroy {
       this.selected.setValue(+event);
       const tab = this.tabs[event];
       this.tabService.setActiveTab(tab.id);
-      this.router.navigate([tab.route]);
+      // this.router.navigate([tab.route]);
     }
   }
 

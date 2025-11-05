@@ -9,7 +9,11 @@ import { Component } from '@angular/core';
 })
 export class ProductsComponent {
 
+  title = 'products component'
   ngOnInit(){
-    console.log('products component')
+    console.log(this.title)
+    setTimeout(() => {
+      this.title = 'products component after 2 seconds'
+    }, 2000)
   }
 }

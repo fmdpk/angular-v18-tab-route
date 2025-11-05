@@ -4,6 +4,7 @@ export interface MenuItem {
   title : string,
   icon: string,
   isActive: boolean,
+  outlet: string
 }
 
 export const MENU_ITEMS: MenuItem[] = [
@@ -12,41 +13,47 @@ export const MENU_ITEMS: MenuItem[] = [
     icon: 'pi pi-home',
     isActive: false,
     route: '/dashboard',
-    title: 'Dashboard'
+    title: 'Dashboard',
+    outlet: 'Dashboard'
   },
   {
     id: '2',
     icon: 'pi pi-home',
     isActive: false,
     route: '/dashboard/:id',
-    title: 'Dashboard Detail'
+    title: 'Dashboard Detail',
+    outlet: 'DashboardDetail'
   },
   {
     id: '3',
     icon: 'pi pi-users',
     isActive: false,
     route: '/users',
-    title: 'Users'
+    title: 'Users',
+    outlet: 'Users'
   },
   {
     id: '4',
     icon: 'pi pi-shopping-cart',
     isActive: false,
     route: '/products',
-    title: 'Products'
+    title: 'Products',
+    outlet: 'Products'
   },
   {
     id: '5',
     icon: 'pi pi-cog',
     isActive: false,
     route: '/settings',
-    title: 'Settings'
+    title: 'Settings',
+    outlet: 'Settings'
   },
   {
     id: '6',
     icon: 'pi pi-warehouse',
     isActive: false,
     route: '/',
-    title: 'Home'
+    title: 'Home',
+    outlet: 'Home'
   },
 ]

@@ -1,16 +1,17 @@
 import {AfterViewInit, Component, inject, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {NavigationEnd, Router, RouterOutlet} from '@angular/router';
+import {NavigationEnd, NavigationError, NavigationStart, Router, RouterOutlet, RoutesRecognized} from '@angular/router';
 import {NavigationComponent} from './navigation/navigation.component';
 import {TabContainerComponent} from './tab-container/tab-container.component';
 import {Subscription} from 'rxjs';
 import {TabService} from './tab.service';
 import {MENU_ITEMS, MenuItem} from './menuItems';
+import {MatTabContainerComponent} from './mat-tab-container/mat-tab-container.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, NavigationComponent, TabContainerComponent],
+  imports: [CommonModule, RouterOutlet, NavigationComponent, TabContainerComponent, MatTabContainerComponent],
   templateUrl: 'app.component.html',
   styleUrl: 'app.component.scss'
 })
@@ -28,18 +29,26 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   ngAfterViewInit() {
     this.subscription = this.router.events.subscribe(res => {
+      if (res instanceof NavigationStart) console.log('NAV START', res);
       if (res instanceof NavigationEnd) {
         this.navigationEndCounter += 1
         if (this.navigationEndCounter < 2) {
-          this.createTabOnPageLoad(res)
+          // this.createTabOnPageLoad(res)
+          // this.tabService.openTab(res.urlAfterRedirects, this.tabService.title$.getValue(), this.tabService.outlet$.getValue(), this.tabService.icon$.getValue(), true, false)
         } else if (this.navigationEndCounter >= 2){
           console.log(res)
           if(!this.tabService.wasLastTab$.getValue()){
-            this.tabService.openTab(res.urlAfterRedirects, this.tabService.title$.getValue(), this.tabService.icon$.getValue(), true, false)
+            this.tabService.openTab(res.urlAfterRedirects, this.tabService.title$.getValue(), this.tabService.outlet$.getValue(), this.tabService.icon$.getValue(), true, false)
           } else {
             this.tabService.wasLastTab$.next(false)
           }
         }
+      }
+      if (res instanceof NavigationError) {
+        console.error('Navigation Error:', res.error);
+      }
+      if (res instanceof RoutesRecognized) {
+        console.log('Routes Recognized:', res.state.root);
       }
     })
   }
@@ -47,14 +56,14 @@ export class AppComponent implements AfterViewInit, OnInit {
   createTabOnPageLoad(res: NavigationEnd) {
     MENU_ITEMS.forEach((item) => {
       let title = this.createTabTitle(item, res.urlAfterRedirects)
-      if(title.split(' - ')[0] === '') {
-        this.tabService.title$.next('dashboard')
-        this.tabService.icon$.next('pi pi-home')
-        this.router.navigate(['/dashboard'])
-        return
-      }
+      // if(title.split(' - ')[0] === '') {
+      //   this.tabService.title$.next('dashboard')
+      //   this.tabService.icon$.next('pi pi-home')
+      //   this.router.navigate(['/dashboard'])
+      //   return
+      // }
       if (item.route.includes(title.split(' - ')[0])) {
-        this.tabService.openTab(res.urlAfterRedirects, title.split(' - ')[0] === '' ? item.title : title, item.icon, true, false)
+        this.tabService.openTab(res.urlAfterRedirects, title.split(' - ')[0] === '' ? item.title : title, item.outlet, item.icon, true, false)
       }
     })
   }
