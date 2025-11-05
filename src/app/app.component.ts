@@ -1,6 +1,14 @@
 import {AfterViewInit, Component, inject, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {NavigationEnd, NavigationError, NavigationStart, Router, RouterOutlet, RoutesRecognized} from '@angular/router';
+import {
+  NavigationEnd,
+  NavigationError,
+  NavigationSkipped,
+  NavigationStart,
+  Router,
+  RouterOutlet,
+  RoutesRecognized
+} from '@angular/router';
 import {NavigationComponent} from './navigation/navigation.component';
 import {TabContainerComponent} from './tab-container/tab-container.component';
 import {Subscription} from 'rxjs';
@@ -29,7 +37,10 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   ngAfterViewInit() {
     this.subscription = this.router.events.subscribe(res => {
-      console.log(res)
+      // console.log(res)
+      if(res instanceof  NavigationSkipped && res.reason.includes('because it is the same as the current Router URL')){
+        this.tabService.openTab(res.url, this.tabService.title$.getValue(), this.tabService.outlet$.getValue(), this.tabService.icon$.getValue(), true, false)
+      }
       if (res instanceof NavigationStart) console.log('NAV START', res);
       if (res instanceof NavigationEnd) {
         this.navigationEndCounter += 1
