@@ -29,16 +29,16 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   ngAfterViewInit() {
     this.subscription = this.router.events.subscribe(res => {
+      console.log(res)
       if (res instanceof NavigationStart) console.log('NAV START', res);
       if (res instanceof NavigationEnd) {
         this.navigationEndCounter += 1
         if (this.navigationEndCounter < 2) {
           // this.createTabOnPageLoad(res)
-          // this.tabService.openTab(res.urlAfterRedirects, this.tabService.title$.getValue(), this.tabService.outlet$.getValue(), this.tabService.icon$.getValue(), true, false)
         } else if (this.navigationEndCounter >= 2){
           console.log(res)
           if(!this.tabService.wasLastTab$.getValue()){
-            this.tabService.openTab(res.urlAfterRedirects, this.tabService.title$.getValue(), this.tabService.outlet$.getValue(), this.tabService.icon$.getValue(), true, false)
+            this.tabService.openTab(res.url, this.tabService.title$.getValue(), this.tabService.outlet$.getValue(), this.tabService.icon$.getValue(), true, false)
           } else {
             this.tabService.wasLastTab$.next(false)
           }
@@ -63,7 +63,7 @@ export class AppComponent implements AfterViewInit, OnInit {
       //   return
       // }
       if (item.route.includes(title.split(' - ')[0])) {
-        this.tabService.openTab(res.urlAfterRedirects, title.split(' - ')[0] === '' ? item.title : title, item.outlet, item.icon, true, false)
+        this.tabService.openTab(res.url, title.split(' - ')[0] === '' ? item.title : title, item.outlet, item.icon, true, false)
       }
     })
   }

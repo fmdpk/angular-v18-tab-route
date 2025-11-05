@@ -18,7 +18,6 @@ export class NavigationComponent {
   openTab(route: string, title: string, icon: string): void {
     // this.tabService.openTab(route, title, icon);
     this.outlet = String(title).charAt(0).toUpperCase() + String(title).slice(1)
-    let routes = { outlet: [route] }
     console.log(this.outlet)
     this.tabService.title$.next(title)
     this.tabService.outlet$.next(this.outlet)

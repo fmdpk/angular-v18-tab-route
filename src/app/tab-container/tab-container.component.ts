@@ -50,10 +50,8 @@ export class TabContainerComponent implements OnInit, OnDestroy {
 
   private updateActiveIndex(): void {
     const index = this.tabs.findIndex((tab) => tab.id === this.activeTabId);
-    setTimeout(()=> {
-      this.activeIndex = index;
-      this.selected.setValue(index)
-    })
+    this.activeIndex = index;
+    this.selected.setValue(index)
   }
 
   removeTab(event: MouseEvent, index: number) {
