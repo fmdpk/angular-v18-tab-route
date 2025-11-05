@@ -24,14 +24,14 @@ export class MatTabContainerComponent {
       title: 'Dashboard',
       outlet: 'Dashboard'
     },
-    {
-      id: 1,
-      icon: 'pi pi-home',
-      isActive: false,
-      route: '/dashboard/:id',
-      title: 'Dashboard Detail',
-      outlet: 'DashboardDetail'
-    },
+    // {
+    //   id: 1,
+    //   icon: 'pi pi-home',
+    //   isActive: false,
+    //   route: '/dashboard/:id',
+    //   title: 'Dashboard Detail',
+    //   outlet: 'DashboardDetail'
+    // },
     {
       id: 2,
       icon: 'pi pi-users',
