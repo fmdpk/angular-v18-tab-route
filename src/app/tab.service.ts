@@ -48,7 +48,7 @@ export class TabService {
     const currentTabs = this.tabsSubject.value;
 
     // Check if tab already exists
-    const existingTab = currentTabs.find((tab) => tab.outlet === outlet);
+    const existingTab = currentTabs.find((tab) => tab.route === route);
     console.log(existingTab)
     if (existingTab) {
       this.changeTabsState(existingTab.route, existingTab.id, false)
