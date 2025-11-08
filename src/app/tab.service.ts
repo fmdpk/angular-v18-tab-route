@@ -106,9 +106,9 @@ export class TabService {
   }
 
   reorderTabs(updatedTabs: Tab[]){
-    updatedTabs.forEach((tab, index) => {
-      tab.id = index;
-    })
+    // updatedTabs.forEach((tab, index) => {
+    //   tab.id = index;
+    // })
     this.tabsSubject.next(updatedTabs);
   }
 

@@ -1,5 +1,6 @@
 <mat-tab-group
   preserveContent
+  [mat-stretch-tabs]="false"
   cdkDropList
   cdkDropListOrientation="horizontal"
   (cdkDropListDropped)="drop($event)"
@@ -8,13 +9,19 @@
   (selectedTabChange)="onTabChanged($event)"
   [(selectedIndex)]="selectedTabIndex"
   animationDuration="0">
-  @for (tab of tabs; track tab.id ) {
+  @for (tab of tabService.tabs$ | async; track tab.id ) {
     <mat-tab>
       <ng-template mat-tab-label>
-        <span
+        <div
           cdkDrag
           cdkDragPreviewClass="example-drag-tabs-preview"
-          cdkDragRootElement=".mat-mdc-tab">{{tab.title}}</span>
+          cdkDragRootElement=".mat-mdc-tab">
+          <span>{{tab.title}}</span>
+          <i
+            class="pi pi-times"
+            (click)="$event.stopPropagation();removeTab(tab, $index)"
+          ></i>
+        </div>
       </ng-template>
 
 <!--      <router-outlet></router-outlet>-->
