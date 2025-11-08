@@ -7,8 +7,7 @@
   cdkDropListElementContainer=".mat-mdc-tab-labels"
   class="example-drag-tabs"
   (selectedTabChange)="onTabChanged($event)"
-  [(selectedIndex)]="selectedTabIndex"
-  animationDuration="0">
+  [(selectedIndex)]="selectedTabIndex">
   @for (tab of tabService.tabs$ | async; track tab.id ) {
     <mat-tab>
       <ng-template mat-tab-label>

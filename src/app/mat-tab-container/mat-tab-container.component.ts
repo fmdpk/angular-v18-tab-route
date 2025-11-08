@@ -78,6 +78,10 @@ export class MatTabContainerComponent implements OnInit{
     this.tabService.tabs$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(res => {
       this.tabs = res
     })
+
+    this.tabService.activeTabId$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(res => {
+      this.selectedTabIndex = res
+    })
   }
 
   drop(event: CdkDragDrop<string[]>) {
