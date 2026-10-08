@@ -1,0 +1,98 @@
+<!-- search.component.html -->
+<form [formGroup]="form" (ngSubmit)="onSearch()" class="search-form">
+  <div class="p-fluid grid">
+    @for (field of fields; track field.key) {
+      <div [class]="field.colClass || 'col-12 md:col-3'">
+        <label [for]="field.key" class="block mb-1">
+          {{ field.label }}
+        </label>
+
+        @switch (field.type || "text") {
+          @case ("dropdown") {
+            <p-select
+              [id]="field.key"
+              [formControlName]="field.key"
+              [options]="field.options || []"
+              [placeholder]="field.placeholder || 'Select'"
+              optionLabel="label"
+              optionValue="value"
+              [showClear]="true"
+              styleClass="w-full"
+              [class.ng-invalid]="hasError(field.key)"
+              [class.ng-dirty]="hasError(field.key)"
+            >
+            </p-select>
+          }
+
+          @case ("date") {
+            <p-datepicker
+              [id]="field.key"
+              [formControlName]="field.key"
+              dateFormat="dd/mm/yy"
+              [placeholder]="field.placeholder || 'dd/mm/yyyy'"
+              [showIcon]="true"
+              styleClass="w-full"
+              [class.ng-invalid]="hasError(field.key)"
+            >
+            </p-datepicker>
+          }
+
+          @case ("checkbox") {
+            <div class="flex align-items-center gap-2 mt-2">
+              <p-checkbox
+                [id]="field.key"
+                [formControlName]="field.key"
+                [binary]="true"
+              >
+              </p-checkbox>
+              <label [for]="field.key">{{ field.label }}</label>
+            </div>
+          }
+
+          @case ("number") {
+            <input
+              pInputText
+              type="number"
+              [id]="field.key"
+              [formControlName]="field.key"
+              [placeholder]="field.placeholder || ''"
+              class="w-full"
+              [class.ng-invalid]="hasError(field.key)"
+            />
+          }
+
+          @default {
+            <input
+              pInputText
+              type="text"
+              [id]="field.key"
+              [formControlName]="field.key"
+              [placeholder]="field.placeholder || ''"
+              class="w-full"
+              [class.ng-invalid]="hasError(field.key)"
+            />
+          }
+        }
+
+        <!-- Dynamic Error Message -->
+        @if (getErrorMessage(field); as errorMsg) {
+          <small class="p-error block mt-1">
+            {{ errorMsg }}
+          </small>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="flex gap-2 mt-4">
+    <button pButton type="submit" label="Search" icon="pi pi-search"></button>
+    <button
+      pButton
+      type="button"
+      label="Reset"
+      icon="pi pi-refresh"
+      class="p-button-secondary"
+      (click)="onReset()"
+    ></button>
+  </div>
+</form>

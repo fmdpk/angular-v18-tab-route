@@ -1,75 +1,18 @@
-import {AfterViewInit, Component, inject, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {NavigationEnd, Router, RouterOutlet} from '@angular/router';
-import {NavigationComponent} from './navigation/navigation.component';
-import {TabContainerComponent} from './tab-container/tab-container.component';
-import {Subscription} from 'rxjs';
-import {TabService} from './tab.service';
-import {MENU_ITEMS, MenuItem} from './menuItems';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterOutlet } from '@angular/router';
+import { PageAComponent } from './page-a/page-a.component';
+import { PageBComponent } from './page-b/page-b.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, NavigationComponent, TabContainerComponent],
+  imports: [CommonModule, RouterOutlet, PageAComponent, PageBComponent],
   templateUrl: 'app.component.html',
-  styleUrl: 'app.component.scss'
+  styleUrl: 'app.component.scss',
 })
-export class AppComponent implements AfterViewInit, OnInit {
-  subscription: Subscription | undefined = undefined;
-  private router: Router = inject(Router);
-  private tabService: TabService = inject(TabService);
-  navigationEndCounter: number = 0
+export class AppComponent implements OnInit {
+  constructor() {}
 
-  constructor() {
-  }
-
-  ngOnInit() {
-  }
-
-  ngAfterViewInit() {
-    this.subscription = this.router.events.subscribe(res => {
-      if (res instanceof NavigationEnd) {
-        this.navigationEndCounter += 1
-        if (this.navigationEndCounter < 2) {
-          this.createTabOnPageLoad(res)
-        } else if (this.navigationEndCounter >= 2){
-          console.log(res)
-          if(!this.tabService.wasLastTab$.getValue()){
-            this.tabService.openTab(res.urlAfterRedirects, this.tabService.title$.getValue(), this.tabService.icon$.getValue(), true, false)
-          } else {
-            this.tabService.wasLastTab$.next(false)
-          }
-        }
-      }
-    })
-  }
-
-  createTabOnPageLoad(res: NavigationEnd) {
-    MENU_ITEMS.forEach((item) => {
-      let title = this.createTabTitle(item, res.urlAfterRedirects)
-      if(title.split(' - ')[0] === '') {
-        this.tabService.title$.next('dashboard')
-        this.tabService.icon$.next('pi pi-home')
-        this.router.navigate(['/dashboard'])
-        return
-      }
-      if (item.route.includes(title.split(' - ')[0])) {
-        this.tabService.openTab(res.urlAfterRedirects, title.split(' - ')[0] === '' ? item.title : title, item.icon, true, false)
-      }
-    })
-  }
-
-  createTabTitle(item: MenuItem, route: string) {
-    let title = ''
-    let splitRoute = route.split('/')
-    splitRoute = splitRoute.filter(item => item !== '')
-    splitRoute.forEach((item, index) => {
-      if (index !== splitRoute.length - 1) {
-        title += (item + ' - ')
-      } else if (index === splitRoute.length - 1) {
-        title += item
-      }
-    })
-    return title
-  }
+  ngOnInit() {}
 }
